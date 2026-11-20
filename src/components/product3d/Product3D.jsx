@@ -139,12 +139,12 @@ export default function Product3D({ product }) {
       </Canvas>
 
       {/* Hint */}
-      <p className="pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 rounded-full bg-white/80 px-3 py-1 text-[0.7rem] font-medium text-ink-soft backdrop-blur">
-        Drag to rotate · Scroll or pinch to zoom
+      <p className="pointer-events-none absolute top-3 left-1/2 -translate-x-1/2 rounded-full bg-white/80 px-3 py-1 whitespace-nowrap text-[0.7rem] font-medium text-ink-soft backdrop-blur">
+        Drag to rotate · <span className="sm:hidden">Pinch</span><span className="hidden sm:inline">Scroll or pinch</span> to zoom
       </p>
 
       {/* Controls */}
-      <div className="absolute inset-x-3 bottom-3 flex flex-wrap items-center justify-between gap-2">
+      <div className="absolute inset-x-2 bottom-2 flex items-center justify-between gap-2 sm:inset-x-3 sm:bottom-3">
         <div className="flex rounded-full bg-white/90 p-1 shadow-sm backdrop-blur" role="group" aria-label="Camera views">
           {VIEWS.map((v) => (
             <button
@@ -161,10 +161,10 @@ export default function Product3D({ product }) {
           ))}
         </div>
         <div className="flex items-center gap-1 rounded-full bg-white/90 p-1 shadow-sm backdrop-blur">
-          <button type="button" onClick={() => zoom(1)} aria-label="Zoom in" className="grid h-8 w-8 place-items-center rounded-full text-ink hover:bg-sand">
+          <button type="button" onClick={() => zoom(1)} aria-label="Zoom in" className="hidden h-8 w-8 sm:grid place-items-center rounded-full text-ink hover:bg-sand">
             <Icon name="plus" size={16} />
           </button>
-          <button type="button" onClick={() => zoom(-1)} aria-label="Zoom out" className="grid h-8 w-8 place-items-center rounded-full text-ink hover:bg-sand">
+          <button type="button" onClick={() => zoom(-1)} aria-label="Zoom out" className="hidden h-8 w-8 sm:grid place-items-center rounded-full text-ink hover:bg-sand">
             <Icon name="minus" size={16} />
           </button>
           <button

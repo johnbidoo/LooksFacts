@@ -45,7 +45,7 @@ function HeroTile({ product, large = false }) {
     <Link
       to={`/skinfacts/${product.id}`}
       className={`group flex min-h-0 flex-col overflow-hidden rounded-xl bg-white ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-lg hover:shadow-black/5 ${
-        large ? 'row-span-2' : ''
+        large ? 'col-span-2 sm:col-span-1 sm:row-span-2' : ''
       }`}
     >
       <ProductImage
@@ -56,12 +56,21 @@ function HeroTile({ product, large = false }) {
         priority
         hoverZoom
         rounded=""
-        className="min-h-0 w-full flex-1"
+        // Fixed heights on phones; on larger screens the grid height is shared
+        className={`w-full sm:h-auto sm:min-h-0 sm:flex-1 ${large ? 'h-56' : 'h-32'}`}
       />
-      <div className="flex items-end justify-between gap-3 border-t border-line px-3.5 py-3 sm:px-4">
+      <div
+        className={`flex gap-x-3 gap-y-1 border-t border-line px-3.5 py-3 sm:flex-row sm:items-end sm:justify-between sm:px-4 ${
+          large ? 'items-end justify-between' : 'flex-col'
+        }`}
+      >
         <span className="min-w-0">
           <span className="block truncate text-[0.68rem] font-semibold tracking-[0.08em] text-ink-soft uppercase">{product.brand}</span>
-          <span className={`block truncate font-medium text-ink ${large ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'}`}>{product.name}</span>
+          <span
+            className={`font-medium text-ink ${large ? 'block truncate text-sm sm:text-base' : 'line-clamp-2 text-xs sm:line-clamp-1 sm:text-sm'}`}
+          >
+            {product.name}
+          </span>
         </span>
         <Price price={product.price} className="shrink-0 text-sm font-semibold text-ink" />
       </div>
@@ -93,7 +102,7 @@ function Hero() {
           </div>
         </div>
 
-        <div className="grid h-[400px] grid-cols-2 grid-rows-2 gap-3 sm:h-[500px] sm:gap-4 lg:col-span-7 lg:h-[540px]">
+        <div className="grid grid-cols-2 gap-3 sm:h-[500px] sm:grid-rows-2 sm:gap-4 lg:col-span-7 lg:h-[540px]">
           {feature && <HeroTile product={feature} large />}
           {rest.map((p) => (
             <HeroTile key={p.id} product={p} />

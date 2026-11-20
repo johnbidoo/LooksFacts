@@ -79,7 +79,7 @@ export default function ProductViewer({ product }) {
                 type="button"
                 aria-pressed={mode === id}
                 onClick={() => setMode(id)}
-                className={`h-8 rounded-full px-4 text-xs font-semibold transition-colors ${
+                className={`h-8 rounded-full px-4 text-xs font-semibold whitespace-nowrap transition-colors ${
                   mode === id ? 'bg-white text-ink shadow-sm' : 'text-ink-muted hover:text-ink'
                 }`}
               >

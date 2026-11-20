@@ -179,7 +179,9 @@ export default function Navbar() {
       {/* Announcement bar */}
       <div className="bg-ink text-white">
         <div className="container-page flex h-9 items-center justify-center text-center text-xs font-medium sm:justify-between">
-          <p>Independent skincare information · Prices are indicative RRPs in AUD</p>
+          <p>
+            <span className="hidden sm:inline">Independent skincare information · </span>Prices are indicative RRPs in AUD
+          </p>
           <Link to="/budget" className="hidden underline-offset-2 hover:underline sm:block">
             Find cheaper alternatives →
           </Link>

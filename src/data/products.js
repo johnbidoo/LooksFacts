@@ -413,8 +413,6 @@ export function getProduct(id) {
   return PRODUCT_MAP[id]
 }
 
-export const BRANDS = [...new Set(PRODUCTS.map((x) => x.brand))].sort((a, b) => a.localeCompare(b))
-
 export const SKIN_TYPES = [
   { id: 'normal', label: 'Normal' },
   { id: 'dry', label: 'Dry' },

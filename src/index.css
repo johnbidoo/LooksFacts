@@ -18,12 +18,12 @@
 
   --color-ink: #141414; /* headings / primary text */
   --color-ink-muted: #4d4a45; /* body text */
-  --color-ink-soft: #85807a; /* meta text */
+  --color-ink-soft: #6b665f; /* meta text — 4.6:1+ on all surfaces (WCAG AA) */
 
   --color-sage: #6f8466;
   --color-sage-deep: #2f4a2c; /* primary accent */
   --color-sage-soft: #e9efe5;
-  --color-clay: #b4593b; /* savings / highlights */
+  --color-clay: #9a4528; /* savings / highlights — 5.5:1 on clay-soft */
   --color-clay-soft: #f8ebe5;
 
   --radius-card: 0.75rem;
