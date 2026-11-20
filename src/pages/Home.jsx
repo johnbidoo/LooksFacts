@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import HoloStage from '../components/home/HoloStage'
 import Price from '../components/product/Price'
 import ProductCard from '../components/product/ProductCard'
 import ProductImage from '../components/product/ProductImage'
@@ -12,7 +11,7 @@ import { countByCategory, findCheaperAlternatives } from '../utils/catalogue'
 
 const pick = (ids) => ids.map(getProduct).filter(Boolean)
 
-/** Left, centre, right products in the hologram banner. */
+/** Hero: first product is the large feature tile, the next two stack beside it. */
 const HERO_PRODUCTS = pick([
   'cerave-moisturising-cream',
   'the-ordinary-niacinamide-10-zinc-1',
@@ -41,35 +40,65 @@ const COUNTS = countByCategory()
 
 /* ------------------------------------------------------------------ */
 
+function HeroTile({ product, large = false }) {
+  return (
+    <Link
+      to={`/skinfacts/${product.id}`}
+      className={`group flex min-h-0 flex-col overflow-hidden rounded-xl bg-white ring-1 ring-black/5 transition-shadow duration-300 hover:shadow-lg hover:shadow-black/5 ${
+        large ? 'row-span-2' : ''
+      }`}
+    >
+      <ProductImage
+        category={product.category}
+        brand={product.brand}
+        seed={product.id}
+        alt={`${product.brand} ${product.name}`}
+        priority
+        hoverZoom
+        rounded=""
+        className="min-h-0 w-full flex-1"
+      />
+      <div className="flex items-end justify-between gap-3 border-t border-line px-3.5 py-3 sm:px-4">
+        <span className="min-w-0">
+          <span className="block truncate text-[0.68rem] font-semibold tracking-[0.08em] text-ink-soft uppercase">{product.brand}</span>
+          <span className={`block truncate font-medium text-ink ${large ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'}`}>{product.name}</span>
+        </span>
+        <Price price={product.price} className="shrink-0 text-sm font-semibold text-ink" />
+      </div>
+    </Link>
+  )
+}
+
 function Hero() {
+  const [feature, ...rest] = HERO_PRODUCTS
   return (
     <section className="container-page pt-4 sm:pt-6">
-      <div className="grid overflow-hidden rounded-2xl bg-[#0b0f12] lg:grid-cols-2">
-        <div className="relative z-10 flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-14 lg:px-14 lg:py-20">
-          <p className="text-xs font-semibold tracking-[0.12em] text-[#7de6ff] uppercase">Independent skincare information</p>
-          <h1 className="mt-4 text-[clamp(2.4rem,5.6vw,4.5rem)] leading-[1.0] font-semibold tracking-[-0.045em] text-white">
+      <div className="grid items-center gap-8 overflow-hidden rounded-2xl bg-sand p-5 sm:p-8 lg:grid-cols-12 lg:gap-12 lg:p-12">
+        <div className="lg:col-span-5">
+          <p className="eyebrow text-sage-deep!">Independent skincare information</p>
+          <h1 className="mt-4 text-[clamp(2.4rem,5.4vw,4.25rem)] leading-[1.02] font-semibold tracking-[-0.045em]">
             Skincare, without the guesswork.
           </h1>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-white/70 sm:text-lg">
+          <p className="mt-5 max-w-md text-base leading-relaxed sm:text-lg">
             Discover {PRODUCTS.length} well-known products, see what&apos;s actually in them, build your routine and find
             cheaper alternatives.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button to="/skinfacts" size="lg" variant="light">
+            <Button to="/skinfacts" size="lg">
               Explore products <Icon name="arrowRight" size={18} />
             </Button>
-            <Button
-              to="/routine"
-              size="lg"
-              variant="secondary"
-              className="border-white/40! bg-transparent! text-white! hover:border-white! hover:bg-white/10!"
-            >
+            <Button to="/routine" size="lg" variant="secondary">
               Build your routine
             </Button>
           </div>
         </div>
 
-        <HoloStage products={HERO_PRODUCTS} />
+        <div className="grid h-[400px] grid-cols-2 grid-rows-2 gap-3 sm:h-[500px] sm:gap-4 lg:col-span-7 lg:h-[540px]">
+          {feature && <HeroTile product={feature} large />}
+          {rest.map((p) => (
+            <HeroTile key={p.id} product={p} />
+          ))}
+        </div>
       </div>
     </section>
   )

@@ -1,8 +1,8 @@
 # Product photos
 
 Drop product photos here and they appear across the site automatically
-(catalogue, product pages, Budget Finder, Routine Builder and the homepage
-hologram banner).
+(catalogue, product pages, Budget Finder, Routine Builder, search and the
+homepage hero). A photo also becomes the default view on its product page.
 
 - **File name** must be the product ID below, e.g. `cerave-hydrating-cleanser.webp`
 - **Formats:** .webp (preferred), .jpg, .jpeg, .png, .avif

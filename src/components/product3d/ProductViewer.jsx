@@ -26,11 +26,12 @@ class ViewerBoundary extends Component {
 }
 
 /**
- * Product media with a 3D / image toggle. Defaults to the interactive 3D
- * model where WebGL is available.
+ * Product media with a 3D / image toggle. Shows the product photo first when
+ * one exists, otherwise the interactive 3D model (where WebGL is available).
  */
 export default function ProductViewer({ product }) {
-  const [mode, setMode] = useState(WEBGL ? '3d' : 'image')
+  // Real photos are the default view; otherwise the 3D model (where WebGL works)
+  const [mode, setMode] = useState(product.image || !WEBGL ? 'image' : '3d')
 
   const image = (
     <ProductImage
