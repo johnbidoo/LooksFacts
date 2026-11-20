@@ -1,111 +1,353 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import 'tailwindcss';
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+/* ------------------------------------------------------------------
+   LooksFacts design tokens — product-forward retail direction.
+   Bright white base, near-black type, one green accent, warm neutral
+   surfaces for product imagery.
+------------------------------------------------------------------- */
+@theme {
+  --font-sans: 'Geist', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Geist', ui-sans-serif, system-ui, 'Segoe UI', Roboto, sans-serif;
 
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --color-canvas: #ffffff; /* page background */
+  --color-paper: #ffffff; /* cards */
+  --color-sand: #f6f4f0; /* product tiles / soft surfaces */
+  --color-sand-deep: #ece7df;
+  --color-line: #e9e6e1; /* hairline borders */
+  --color-line-strong: #d3cec6;
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
+  --color-ink: #141414; /* headings / primary text */
+  --color-ink-muted: #4d4a45; /* body text */
+  --color-ink-soft: #85807a; /* meta text */
+
+  --color-sage: #6f8466;
+  --color-sage-deep: #2f4a2c; /* primary accent */
+  --color-sage-soft: #e9efe5;
+  --color-clay: #b4593b; /* savings / highlights */
+  --color-clay-soft: #f8ebe5;
+
+  --radius-card: 0.75rem;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --animate-fade-in: fade-in 0.25s var(--ease-soft) both;
+  --animate-slide-down: slide-down 0.3s var(--ease-soft) both;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slide-down {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
   }
 
-  #social .button-icon {
-    filter: invert(1) brightness(2);
+  body {
+    @apply bg-canvas font-sans text-ink-muted antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    @apply bg-sage-soft text-ink;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-sage-deep;
+  }
+
+  button,
+  select {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
   }
 }
 
-body {
-  margin: 0;
-}
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1320px] px-4 sm:px-6 lg:px-8;
+  }
 
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-}
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.12em] text-ink-soft uppercase;
+  }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
+  .section-title {
+    @apply text-2xl font-semibold tracking-[-0.02em] text-ink sm:text-[1.75rem];
+  }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+  .chip {
+    @apply inline-flex h-9 shrink-0 items-center gap-2 rounded-full border border-line px-4 text-sm font-medium whitespace-nowrap text-ink transition-colors hover:border-ink;
+  }
+  .chip[aria-pressed='true'],
+  .chip.is-active {
+    @apply border-ink bg-ink text-white;
+  }
+
+  .field {
+    @apply h-11 w-full rounded-lg border border-line-strong bg-white px-3.5 text-[0.94rem] text-ink transition-colors placeholder:text-ink-soft hover:border-ink-soft focus:border-ink focus:outline-none;
+  }
+
+  .tag {
+    @apply inline-flex items-center rounded-full bg-sand px-2.5 py-1 text-xs font-medium text-ink-muted;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
+
+/* ------------------------------------------------------------------
+   Hologram stage (homepage hero) — see components/home/HoloStage.jsx
+------------------------------------------------------------------- */
+.holo-stage {
+  --holo: 125 230 255;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 55% at 50% 78%, rgb(var(--holo) / 0.18), transparent 70%),
+    radial-gradient(80% 60% at 50% 0%, rgb(140 120 255 / 0.12), transparent 70%),
+    #0b0f12;
+}
+
+/* Perspective grid floor */
+.holo-floor {
+  position: absolute;
+  inset: auto -50% -6% -50%;
+  height: 45%;
+  background-image:
+    linear-gradient(rgb(var(--holo) / 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--holo) / 0.22) 1px, transparent 1px);
+  background-size: 44px 44px;
+  transform: perspective(420px) rotateX(62deg);
+  transform-origin: top;
+  mask-image: linear-gradient(to bottom, transparent, #000 25%, #000 60%, transparent);
+  animation: holo-floor 6s linear infinite;
+}
+
+/* Projector disc */
+.holo-base {
+  position: absolute;
+  left: 50%;
+  bottom: 13%;
+  width: 72%;
+  height: 11%;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(var(--holo) / 0.55), rgb(var(--holo) / 0.12) 60%, transparent);
+  box-shadow:
+    0 0 0 1px rgb(var(--holo) / 0.35),
+    0 0 60px 10px rgb(var(--holo) / 0.25);
+}
+.holo-base::after {
+  content: '';
+  position: absolute;
+  inset: 22%;
+  border-radius: 50%;
+  border: 1px solid rgb(var(--holo) / 0.5);
+  animation: holo-pulse 3.2s ease-out infinite;
+}
+
+/* Light cone rising from the disc */
+.holo-beam {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  width: 72%;
+  height: 72%;
+  translate: -50% 0;
+  background: linear-gradient(to top, rgb(var(--holo) / 0.32), rgb(var(--holo) / 0.04) 75%, transparent);
+  clip-path: polygon(8% 0, 92% 0, 64% 100%, 36% 100%);
+  filter: blur(6px);
+  animation: holo-beam 4s ease-in-out infinite;
+}
+
+/* A projected product */
+.holo-item {
+  animation:
+    holo-float 6s ease-in-out infinite,
+    holo-flicker 7s steps(1) infinite;
+}
+.holo-item .holo-render {
+  opacity: 0.92;
+  filter: drop-shadow(0 0 14px rgb(var(--holo) / 0.6));
+  animation: holo-hue 8s ease-in-out infinite;
+  mask-image: repeating-linear-gradient(to bottom, #000 0 2px, rgb(0 0 0 / 0.55) 2px 4px);
+}
+/* Real photos are tinted into hologram colours (illustrations are drawn in them) */
+.holo-photo {
+  filter: grayscale(1) brightness(0.72) sepia(1) saturate(6) hue-rotate(150deg) brightness(1.45);
+  mix-blend-mode: screen;
+}
+.holo-item:hover .holo-render {
+  opacity: 1;
+}
+
+/* Horizontal scan bar sweeping the stage */
+.holo-scan {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 18%;
+  background: linear-gradient(to bottom, transparent, rgb(var(--holo) / 0.12), transparent);
+  animation: holo-scan 5s linear infinite;
+  pointer-events: none;
+}
+
+/* Fine scanlines over everything */
+.holo-lines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, rgb(255 255 255 / 0.035) 0 1px, transparent 1px 3px);
+  pointer-events: none;
+}
+
+.holo-tag {
+  border: 1px solid rgb(var(--holo) / 0.4);
+  background: rgb(11 15 18 / 0.7);
+  color: rgb(var(--holo));
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 18px rgb(var(--holo) / 0.15);
+}
+
+.holo-particle {
+  position: absolute;
+  bottom: 20%;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgb(var(--holo));
+  box-shadow: 0 0 8px rgb(var(--holo));
+  animation: holo-rise 5s linear infinite;
+}
+
+@keyframes holo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
   }
 }
-p {
-  margin: 0;
+@keyframes holo-hue {
+  0%,
+  100% {
+    filter: hue-rotate(0deg) drop-shadow(0 0 14px rgb(var(--holo) / 0.6));
+  }
+  50% {
+    filter: hue-rotate(40deg) drop-shadow(0 0 20px rgb(170 140 255 / 0.55));
+  }
+}
+@keyframes holo-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  41% {
+    opacity: 0.55;
+  }
+  42% {
+    opacity: 1;
+  }
+  77% {
+    opacity: 0.8;
+  }
+  78% {
+    opacity: 1;
+  }
+}
+@keyframes holo-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(600%);
+  }
+}
+@keyframes holo-beam {
+  0%,
+  100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+@keyframes holo-pulse {
+  from {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+@keyframes holo-floor {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 44px;
+  }
+}
+@keyframes holo-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-260px);
+    opacity: 0;
+  }
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
