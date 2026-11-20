@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
+import { useDialog } from '../../hooks/useDialog'
 import CurrencySelect from '../ui/CurrencySelect'
 import Icon from '../ui/Icon'
 import Logo from '../ui/Logo'
@@ -91,6 +92,59 @@ function SearchTrigger({ onOpen }) {
   )
 }
 
+/** Slide-in navigation for small screens. Mounted only while open. */
+function MobileMenu({ onClose }) {
+  const ref = useDialog(onClose)
+  return (
+    <div ref={ref} id="mobile-menu" className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+      <button
+        type="button"
+        tabIndex={-1}
+        data-dialog-backdrop
+        aria-hidden="true"
+        onClick={onClose}
+        className="absolute inset-0 animate-fade-in cursor-default bg-black/30"
+      />
+      <div className="relative flex h-full w-[min(86vw,360px)] animate-fade-in flex-col bg-white shadow-2xl">
+        <div className="flex h-16 items-center justify-between border-b border-line px-4">
+          <Logo />
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            className="grid h-10 w-10 place-items-center rounded-full text-ink hover:bg-sand"
+          >
+            <Icon name="close" size={22} />
+          </button>
+        </div>
+        <ul className="flex-1 overflow-y-auto p-2">
+          {NAV_LINKS.map((l) => (
+            <li key={l.to}>
+              <NavLink
+                to={l.to}
+                onClick={onClose}
+                end={l.end}
+                className={({ isActive }) =>
+                  `flex items-center justify-between rounded-lg px-3 py-3.5 text-base font-medium ${
+                    isActive ? 'bg-sand text-ink' : 'text-ink-muted'
+                  }`
+                }
+              >
+                {l.label}
+                <Icon name="chevronRight" size={18} className="text-ink-soft" />
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+        <div className="flex items-center justify-between border-t border-line px-5 py-4 text-sm text-ink-muted">
+          <span>Currency</span>
+          <CurrencySelect />
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -104,12 +158,8 @@ export default function Navbar() {
     setSearchOpen(false)
   }
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : ''
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [menuOpen])
+  const closeMenu = useCallback(() => setMenuOpen(false), [])
+  const closeSearch = useCallback(() => setSearchOpen(false), [])
 
   // "/" opens search
   useEffect(() => {
@@ -189,54 +239,9 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile menu */}
-      {menuOpen && (
-        <div id="mobile-menu" className="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Menu">
-          <button
-            type="button"
-            aria-label="Close menu"
-            onClick={() => setMenuOpen(false)}
-            className="absolute inset-0 animate-fade-in cursor-default bg-black/30"
-          />
-          <div className="relative flex h-full w-[min(86vw,360px)] animate-fade-in flex-col bg-white shadow-2xl">
-            <div className="flex h-16 items-center justify-between border-b border-line px-4">
-              <Logo />
-              <button
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
-                className="grid h-10 w-10 place-items-center rounded-full text-ink hover:bg-sand"
-              >
-                <Icon name="close" size={22} />
-              </button>
-            </div>
-            <ul className="flex-1 overflow-y-auto p-2">
-              {NAV_LINKS.map((l) => (
-                <li key={l.to}>
-                  <NavLink
-                    to={l.to}
-                    end={l.end}
-                    className={({ isActive }) =>
-                      `flex items-center justify-between rounded-lg px-3 py-3.5 text-base font-medium ${
-                        isActive ? 'bg-sand text-ink' : 'text-ink-muted'
-                      }`
-                    }
-                  >
-                    {l.label}
-                    <Icon name="chevronRight" size={18} className="text-ink-soft" />
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-            <div className="flex items-center justify-between border-t border-line px-5 py-4 text-sm text-ink-muted">
-              <span>Currency</span>
-              <CurrencySelect />
-            </div>
-          </div>
-        </div>
-      )}
+      {menuOpen && <MobileMenu onClose={closeMenu} />}
 
-      <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <SearchOverlay open={searchOpen} onClose={closeSearch} />
     </>
   )
 }

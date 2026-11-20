@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { getCategory } from '../../data/categories'
+import { useDialog } from '../../hooks/useDialog'
 import { PRODUCTS } from '../../data/products'
 import { matchesQuery } from '../../utils/catalogue'
 import { STEPS, TIMES, stepsFor } from '../../utils/routine'
@@ -14,16 +15,7 @@ export default function ProductPicker({ time, initialStep = 'all', selectedIds, 
   const inputRef = useRef(null)
   const steps = stepsFor(time)
 
-  useEffect(() => {
-    inputRef.current?.focus()
-    const onKey = (e) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
-    }
-  }, [onClose])
+  const dialogRef = useDialog(onClose, { initialFocus: inputRef })
 
   const allowed = useMemo(() => new Set(steps.flatMap((s) => s.categories)), [steps])
 
@@ -33,8 +25,8 @@ export default function ProductPicker({ time, initialStep = 'all', selectedIds, 
   }, [step, query, allowed])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-label={`Add products to ${TIMES[time].label.toLowerCase()} routine`}>
-      <button type="button" aria-label="Close" onClick={onClose} className="absolute inset-0 animate-fade-in cursor-default bg-black/40" />
+    <div ref={dialogRef} className="fixed inset-0 z-50 flex items-end justify-center sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-label={`Add products to ${TIMES[time].label.toLowerCase()} routine`}>
+      <button type="button" tabIndex={-1} data-dialog-backdrop aria-hidden="true" onClick={onClose} className="absolute inset-0 animate-fade-in cursor-default bg-black/40" />
       <div className="relative flex max-h-[88vh] w-full max-w-2xl animate-slide-down flex-col overflow-hidden rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl">
         <div className="border-b border-line p-4 sm:p-5">
           <div className="flex items-center justify-between gap-4">

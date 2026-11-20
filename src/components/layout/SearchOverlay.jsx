@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { getCategory } from '../../data/categories'
+import { useDialog } from '../../hooks/useDialog'
 import { filterProducts } from '../../utils/catalogue'
 import Price from '../product/Price'
 import ProductImage from '../product/ProductImage'
@@ -21,16 +22,7 @@ function SearchPanel({ onClose }) {
 
   const results = useMemo(() => (query.trim() ? filterProducts({ query }) : []), [query])
 
-  useEffect(() => {
-    inputRef.current?.focus()
-    const onKey = (e) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', onKey)
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.body.style.overflow = ''
-    }
-  }, [onClose])
+  const dialogRef = useDialog(onClose, { initialFocus: inputRef })
 
   const goToAll = (q) => {
     const term = q.trim()
@@ -39,10 +31,12 @@ function SearchPanel({ onClose }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Search products">
+    <div ref={dialogRef} className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="Search products">
       <button
         type="button"
-        aria-label="Close search"
+        tabIndex={-1}
+        data-dialog-backdrop
+        aria-hidden="true"
         onClick={onClose}
         className="absolute inset-0 animate-fade-in cursor-default bg-black/30"
       />
